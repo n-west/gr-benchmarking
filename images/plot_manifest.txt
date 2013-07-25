@@ -1,0 +1,38 @@
+volk/volk_plot.py -E -D math_blocks.txt
+-o images/math_x86_volked.pdf -T "atom_gr353_volked" "e350_gr362git_volked" "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_volked" "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_volked" "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1_volked"
+-o images/math_x86_gr3651.pdf -T "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_volked" "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_volked" "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1_volked"
+-o images/math_arm.pdf -T "e110_gr353_volked" "zc702_gr353_volked" "zc702-linaro_gr353_volked" "exynos4412_cortexa9_gr3.6.4.1_volked" "iMX6_gr3641_volked"
+-o images/math_i7.pdf -T "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_generic" "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_volked" "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_generic" "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_volked"
+
+volk/volk_plot.py -E -D conversion_blocks.txt
+-o images/conversions_x86_volked.pdf -T "atom_gr353_volked" "e350_gr362git_volked" "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_volked" "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_volked" "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1_volked"
+-o images/conversions_x86_gr3651.pdf -T "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_volked" "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_volked" "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1_volked"
+-o images/conversions_arm.pdf -T "e110_gr353_volked" "zc702_gr353_volked" "zc702-linaro_gr353_volked" "exynos4412_cortexa9_gr3.6.4.1_volked" "iMX6_gr3641_volked"
+-o images/conversions_i7.pdf -T  "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_volked" "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_volked"
+
+mp-sched/mp_plot.py -D fir_grid.txt
+-o images/fir_i7-980_volked.pdf        -T "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1fir_volked"
+-o images/fir_i7-3770s_volked.pdf      -T "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1fir_volked"
+-o images/fir_xeon-e5-2680_volked.pdf  -T "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1fir_volked"
+-o images/fir_i7-980_generic.pdf       -T "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_fir_generic"
+-o images/fir_i7-3770s_generic.pdf     -T "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_fir_generic"
+-o images/fir_xeon-e5-2680_generic.pdf -T "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1_fir_generic"
+
+mp-sched/mp_plot.py -D fft_grid.txt
+-o images/fft_i7-980_volked.pdf        -T "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1fft_volked"
+-o images/fft_i7-3770s_volked.pdf      -T "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1fft_volked"
+-o images/fft_xeon-e5-2680_volked.pdf  -T "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1fft_volked"
+-o images/fft_i7-980_generic.pdf       -T "Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz_gr3.6.5.1_fft_generic"
+-o images/fft_i7-3770s_generic.pdf     -T "Intel(R)-Core(TM)-i7-3770S-CPU-@-3.10GHz_gr3.6.5.1_fft_generic"
+-o images/fir_xeon-e5-2680_generic.pdf -T "Intel(R)-Xeon(R)-CPU-E5-2680-0-@-2.70GHz_gr3.6.5.1_fft_generic"
+-o images/fft_i7_volked.pdf -T i7.960_gr365_fft_volked
+-o images/fft_atom_volked.pdf -T atom_gr353_fft_volked
+-o images/fft_e110_volked.pdf -T e110_gr353_fft_volked
+-o images/fft_e350_volked.pdf -T e350_gr353_fft_volked
+-o images/fft_iMX6_volked.pdf -T iMX6_gr353_fft_volked
+-o images/fft_i7_generic.pdf -T i7.960_gr365_fft_generic
+-o images/fft_atom_generic.pdf -T atom_gr353_fft_generic
+-o images/fft_e110_generic.pdf -T e110_gr353_fft_generic
+-o images/fft_e350_generic.pdf -T e350_gr353_fft_generic
+-o images/fft_iMX6_generic.pdf -T iMX6_gr353_fft_generic
+

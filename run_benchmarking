@@ -1,0 +1,76 @@
+#!/bin/bash
+
+# 1st parameter is processor description
+# 2nd parameter is gnuradio version
+# sed doc:
+# find line that starts with model name
+#  on that line, first match everything up to a colon (that goes to \1), then match any space after colon
+#  finally, match everything else and put it in \2, return just \2
+#  then replace all of the spaces (and any consecutive spaces) with -
+#  print the line, then quit (after the first match)
+# result is like: Intel(R)-Core(TM)-i7-CPU-980-@-3.33GHz
+# if this ever breaks, I'm sorry you have to think about it ~nathan
+ARCH=`sed -n '/^model name/{s/\(.*:\) \(.*\)/\2/;s/[[:space:]]\+/-/gp;q}' /proc/cpuinfo`
+GR_VERSION=`gnuradio-config-info -v`
+# Add a short comment about the current run (good spot for compiler options, etc..)
+COMMENT=$1
+if [ -z "$COMMENT" ] # is empty string?
+ then
+    LABEL=$ARCH"_gr"$GR_VERSION
+ else # user provided some comment
+    COMMENT=`echo $COMMENT | sed 's/[[:space:]]/_/g'` # make sure no spaces in user in
+    LABEL=$ARCH"_gr"$GR_VERSION":"$COMMENT
+fi
+# a "good thing to do" would be check if this table already exists. 
+#  if it does then prompt to replace old results or add a comment
+echo $LABEL
+export PYTHONPATH=$PYTHONPATH:utils/
+
+# do some sanity checks
+rtprio_limit=`ulimit -r` # I'm afraid this is a bashism
+if [ "$rtprio_limit" -le "50" ]
+ then
+  echo "You may want to enable real time scheduling for this user (see /etc/security/limits)"
+fi
+
+## check for existing volk_profile
+if [ -f ~/.volk/volk_config ]
+ then
+    read -p "volk_config already exists. Use the existing profile? [y/N] " skip_profile
+fi
+case $skip_profile in
+ '' | n | N | no | NO | No)
+    volk_profile
+    ;;
+ y | Y | yes | YES | Yes)
+    echo "Using existing volk_config"
+    ;;
+ *)
+    echo "Valid input is 'y' or 'n'. Received '$run_profile'. Exiting..."
+    exit
+    ;;
+esac
+    
+# run benchmarks with volked kernels
+mp-sched/run_synthetic_fft.py -m 10 -D synth_fft.txt -L ${LABEL}fft_volked
+mp-sched/run_synthetic_fir.py -m 10 -D synth_fir.txt -L ${LABEL}fir_volked
+volk/volk_math.py  -L ${LABEL}_volked -D volk_math.db --all
+volk/volk_types.py -L ${LABEL}_volked -D volk_types.db --all
+
+# Change all architectures in volk_profile to generic
+echo 'old volk_config moved to ~/.volk/volk_config.volked'
+echo 'generic volk_config being generated'
+mv ~/.volk/volk_config ~/.volk/volk_config.volked
+# note to nathan - this isn't very future proof use grep fields
+sed 's/\(orc\|neon\|ss|avx\)[a-z0-9_]*/generic/' ~/.volk/volk_config.volked > ~/.volk/volk_config
+
+# run benchmarks with generic kernels
+mp-sched/run_synthetic_fft.py -m 10 -D synth_fft.txt -L ${LABEL}_fft_generic
+mp-sched/run_synthetic_fir.py -m 10 -D synth_fir.txt -L ${LABEL}_fir_generic
+volk/volk_math.py -L ${LABEL}_generic -D volk_math.db --all
+volk/volk_types.py -L ${FNAME}_generic -D volk_types.db --all
+
+# clean up, do the right thing(TM)
+echo "Moving volk_profile.volked back to volk_profile"
+mv ~/.volk/volk_config.volked ~/.volk/volk_config
+
