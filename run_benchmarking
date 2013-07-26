@@ -52,23 +52,23 @@ case $skip_profile in
 esac
     
 # run benchmarks with volked kernels
-mp-sched/run_synthetic_fft.py -m 10 -D synth_fft.txt -L ${LABEL}fft_volked
-mp-sched/run_synthetic_fir.py -m 10 -D synth_fir.txt -L ${LABEL}fir_volked
-volk/volk_math.py  -L ${LABEL}_volked -D volk_math.db --all
-volk/volk_types.py -L ${LABEL}_volked -D volk_types.db --all
+mp-sched/run_synthetic_fft.py -m 10 -D fft_grid.txt -L ${LABEL}_fft_volked
+mp-sched/run_synthetic_fir.py -m 10 -D fir_grid.txt -L ${LABEL}_fir_volked
+volk/volk_math.py  -L ${LABEL}_volked -D math_blocks.txt --all
+volk/volk_types.py -L ${LABEL}_volked -D conversion_blocks.txt --all
 
 # Change all architectures in volk_profile to generic
 echo 'old volk_config moved to ~/.volk/volk_config.volked'
 echo 'generic volk_config being generated'
 mv ~/.volk/volk_config ~/.volk/volk_config.volked
 # note to nathan - this isn't very future proof use grep fields
-sed 's/\(orc\|neon\|ss|avx\)[a-z0-9_]*/generic/' ~/.volk/volk_config.volked > ~/.volk/volk_config
+sed 's/ [[:graph:]]\+/ generic/g' ~/.volk/volk_config.volked > ~/.volk/volk_config
 
 # run benchmarks with generic kernels
-mp-sched/run_synthetic_fft.py -m 10 -D synth_fft.txt -L ${LABEL}_fft_generic
-mp-sched/run_synthetic_fir.py -m 10 -D synth_fir.txt -L ${LABEL}_fir_generic
-volk/volk_math.py -L ${LABEL}_generic -D volk_math.db --all
-volk/volk_types.py -L ${FNAME}_generic -D volk_types.db --all
+mp-sched/run_synthetic_fft.py -m 10 -D fft_grid.txt -L ${LABEL}_fft_generic
+mp-sched/run_synthetic_fir.py -m 10 -D fir_grid.txt -L ${LABEL}_fir_generic
+volk/volk_math.py -L ${LABEL}_generic -D math_blocks.txt --all
+volk/volk_types.py -L ${FNAME}_generic -D conversion_blocks.txt --all
 
 # clean up, do the right thing(TM)
 echo "Moving volk_profile.volked back to volk_profile"

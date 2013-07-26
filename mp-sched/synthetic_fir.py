@@ -20,7 +20,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-from gnuradio import gr, gru, eng_notation, blks2
+from gnuradio import gr, gru, eng_notation, filter, blocks
 from gnuradio.eng_option import eng_option
 from optparse import OptionParser
 import os
@@ -30,8 +30,8 @@ from common_test_funcs import *
 class pipeline(gr.hier_block2):
     def __init__(self, nstages, ntaps=256):
         """
-        Create a pipeline of nstages of gr.fir_filter_fff's connected in serial
-        terminating in a gr.null_sink.
+        Create a pipeline of nstages of filter.fir_filter_fff's connected in serial
+        terminating in a blocks.null_sink.
         """
         gr.hier_block2.__init__(self, "pipeline",
                                 gr.io_signature(1, 1, gr.sizeof_float),
@@ -39,11 +39,11 @@ class pipeline(gr.hier_block2):
         taps = ntaps*[1.0/ntaps]
         upstream = self
         for i in range(nstages):
-            op = gr.fir_filter_fff(1, taps)
+            op = filter.fir_filter_fff(1, taps)
             self.connect(upstream, op)
             upstream = op
 
-        self.connect(upstream, gr.null_sink(gr.sizeof_float))
+        self.connect(upstream, blocks.null_sink(gr.sizeof_float))
 
 
 class top(gr.top_block):
@@ -80,8 +80,8 @@ class top(gr.top_block):
         # Something vaguely like floating point ops
         self.flop = 2 * ntaps * options.npipelines * options.nstages * options.nsamples
 
-        src = gr.null_source(gr.sizeof_float)
-        head = gr.head(gr.sizeof_float, int(options.nsamples))
+        src = blocks.null_source(gr.sizeof_float)
+        head = blocks.head(gr.sizeof_float, int(options.nsamples))
         self.connect(src, head)
 
         for n in range(options.npipelines):
